@@ -1,0 +1,14 @@
+<body>
+  <!-- give the canvas the ID your JS expects -->
+  <canvas id="noiseCanvas" width="800" height="600"></canvas>
+
+  <!-- load a real build of SimplexNoise via jsDelivr -->
+  <script src="https://cdn.jsdelivr.net/npm/simplex-noise@2.4.0/simplex-noise.min.js"></script>
+  <script>
+  // sanity check:
+  console.log("SimplexNoise:", typeof SimplexNoise);
+  </script>
+
+  <!-- load your perlin.js once, after the library and after the DOM -->
+  <script src="perlin.js"></script>
+</body>
