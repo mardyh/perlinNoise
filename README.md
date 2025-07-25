@@ -1,2 +1,2 @@
 # perlinNoise
- 3d perlin noise test with webgl
+ 3d perlin noise test with js
