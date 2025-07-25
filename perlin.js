@@ -16,7 +16,7 @@
 	const resolution = 10; //resolution for grid must be multiple of screen resolution
 	const simplex = new SimplexNoise();
 	const scale   = 0.01; //scale for noise < 1 will zoom
-	const zSpeed  = 0.0002; //how 'fast' the noise 'animates'
+	const zSpeed  = 0.1; //how 'fast' the noise 'animates'
 	let   zTime   = 0; //initialize z value
 	let canvas_width, canvas_height, noiseCanvas_width, noiseCanvas_height;
 	let animationId = null; //track noise animation
@@ -24,11 +24,14 @@
 	
 	//for particles
 	let particles = [];
-	const particleCount = 6000;
-	const particleSpeed = .1; //speed for particle movement
+	const particleCount = 8000;
+	const particleSpeed = .07; //speed for particle movement
 	const friction = 0.9; //1=no friction 0 = stuck
 	const velocityJitter = .1; //random velocity adjustment strength
-	let particleAnimationId = null; //track particle animation
+	//let particleAnimationId = null; //track particle animation
+	
+	//for tick
+	let lastTime = null;
 	
 // ----------------------// FUNCTIONS //------------------------- //	
 	
@@ -110,10 +113,14 @@
 			
 			const limit = Math.random() * 0.5;
 			
+			const hue = p.angle / (2 * Math.PI) * 360;
+			const [r, g, b] = hslToRgb(hue / 360, 1, 0.5);
+			
 			if (distSq < 100) { // Only draw short trails (or you get giant bars when the particles go from one side to the other)
 				canvasCtx.beginPath();
 				canvasCtx.moveTo(p.px, p.py);
 				canvasCtx.lineTo(p.x, p.y);
+				canvasCtx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
 				canvasCtx.stroke();	
 			}
 		}
@@ -152,6 +159,7 @@
 			// apply velocity to position
 			p.x += p.xv;
 			p.y += p.yv;
+			p.angle = angle //store direction from noise field
 			
 			// re-spawn particles that move off screen
 			if (p.x < 0 || p.x >= canvas.width || p.y < 0 || p.y >= canvas.height) 
@@ -163,12 +171,14 @@
 		}
 	}
 	
+	/*
 	function animateParticles()
 	{
 		updateParticles();
 		drawParticles();
 		particleAnimationId = requestAnimationFrame(animateParticles);
 	}
+	*/
 	
 	function drawNoise() //draws the noise
 	{
@@ -200,20 +210,40 @@
 		}
 		noiseCtx.putImageData(img, 0, 0);
 
-		zTime += zSpeed;
-		animationId = requestAnimationFrame(drawNoise);
+		//zTime += zSpeed; //relocating to a tick() system
+		//animationId = requestAnimationFrame(drawNoise);
 	}
 	
 	function init() //main function
 	{
 		if (animationId) cancelAnimationFrame(animationId); // stop previous noise anim loop
-		if (particleAnimationId) cancelAnimationFrame(particleAnimationId); //stop prev particl anim loop
+		//if (particleAnimationId) cancelAnimationFrame(particleAnimationId); //stop prev particl anim loop
 		console.log("INIT");
 		
 		initParticles();
+		lastTime = null;
+		tick(performance.now());
+		
+		//drawParticles();
+		//animateParticles();
+		//drawNoise(); //draws the noise colored with hsl
+	}
+	
+	function tick(timestamp)
+	{
+		if (!lastTime) lastTime = timestamp;
+		const delta = timestamp - lastTime;
+		lastTime = timestamp
+		
+		//advance zTime using real time delta
+		zTime += zSpeed * (delta/1000);
+		
+		//update and draw
+		updateParticles();
 		drawParticles();
-		animateParticles();
-		drawNoise();
+		//drawNoise();
+		
+		animationId = requestAnimationFrame(tick);
 	}
 	
 	
