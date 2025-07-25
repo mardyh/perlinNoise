@@ -1,0 +1,23 @@
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+  }
+  canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  #noiseCanvas {
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+  }
+  #canvas {
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none; /* in case it's transparent and shouldn't block input */
+  }
+</style>
