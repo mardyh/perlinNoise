@@ -53,7 +53,7 @@
 		//resize main canvas
 		canvas.width  = window.innerWidth;
 		canvas.height = window.innerHeight;
-		console.log(noiseCanvas.width,noiseCanvas.height);
+		//console.log(noiseCanvas.width,noiseCanvas.height);
 		
 		init();
 	}
@@ -171,15 +171,6 @@
 		}
 	}
 	
-	/*
-	function animateParticles()
-	{
-		updateParticles();
-		drawParticles();
-		particleAnimationId = requestAnimationFrame(animateParticles);
-	}
-	*/
-	
 	function drawNoise() //draws the noise
 	{
 		//internal vars
@@ -210,23 +201,17 @@
 		}
 		noiseCtx.putImageData(img, 0, 0);
 
-		//zTime += zSpeed; //relocating to a tick() system
-		//animationId = requestAnimationFrame(drawNoise);
 	}
 	
 	function init() //main function
 	{
 		if (animationId) cancelAnimationFrame(animationId); // stop previous noise anim loop
 		//if (particleAnimationId) cancelAnimationFrame(particleAnimationId); //stop prev particl anim loop
-		console.log("INIT");
+		//console.log("INIT");
 		
 		initParticles();
 		lastTime = null;
 		tick(performance.now());
-		
-		//drawParticles();
-		//animateParticles();
-		//drawNoise(); //draws the noise colored with hsl
 	}
 	
 	function tick(timestamp)
