@@ -1,5 +1,11 @@
-// perlin.js
+// ------------ // Particle Flow Based On Perlin Noise //-----------//
+
+// by Mardy
+// July 2025
 // I call it perlin, but it is actually simplex noise
+// sorry if this code is a mess, I actually don't know how to code.
+// I got the idea from this project https://codepen.io/aecend/pen/WbONyK
+
 (function(w)
 {
 // -----------------------// VARIABLES //------------------------- //
@@ -21,14 +27,14 @@
 	let canvas_width, canvas_height, noiseCanvas_width, noiseCanvas_height;
 	let animationId = null; //track noise animation
 
-	
 	//for particles
 	let particles = [];
-	const particleCount = 8000;
+	const MIN_PARTICLES = 500;
+	const MAX_PARTICLES = 8000;
+	let particleCount = MAX_PARTICLES;
 	const particleSpeed = .07; //speed for particle movement
 	const friction = 0.9; //1=no friction 0 = stuck
 	const velocityJitter = .1; //random velocity adjustment strength
-	//let particleAnimationId = null; //track particle animation
 	
 	//for tick
 	let lastTime = null;
@@ -38,7 +44,7 @@
 	//functions
 	function resizeCanvasToGrid() //handles resizing grid based on canvas dimensions
 	{
-		// 1) figure out pixel dimensions that are multiples of `resolution`
+		//figure out pixel dimensions that are multiples of `resolution`
 		noiseCanvas_width  = Math.floor(window.innerWidth  / resolution) * resolution;
 		noiseCanvas_height = Math.floor(window.innerHeight / resolution) * resolution;
 		
@@ -46,7 +52,7 @@
 		num_cols = noiseCanvas_width  / resolution;
 		num_rows = noiseCanvas_height / resolution;
 
-		// 3) size the *noise* canvas at [num_cols×num_rows]
+		//size the *noise* canvas at [num_cols×num_rows]
 		noiseCanvas.width  = num_cols;
 		noiseCanvas.height = num_rows;
 		
@@ -54,6 +60,16 @@
 		canvas.width  = window.innerWidth;
 		canvas.height = window.innerHeight;
 		//console.log(noiseCanvas.width,noiseCanvas.height);
+		
+		//calculate how many particles should be on screen
+		const screenArea = canvas.width * canvas.height;
+		const refArea = 1920 * 1080;
+		const scaleFactor = Math.pow(screenArea / refArea, 0.7) //non-linear relationship between screen area and particle count
+		particleCount = Math.floor
+		(
+			Math.max(MIN_PARTICLES, Math.min(MAX_PARTICLES, MAX_PARTICLES * scaleFactor))
+		);
+		console.log(particleCount);
 		
 		init();
 	}
