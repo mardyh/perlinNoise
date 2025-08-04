@@ -1,2 +1,3 @@
 # perlinNoise
- 3d perlin noise test with js
+
+Flowfield particle animation based on 3d Simplex Noise
